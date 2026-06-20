@@ -18,6 +18,7 @@ export type WizardStep =
   | "pathway"
   | "readiness"
   | "routing"
+  | "delivery"
   | "draft"
   | "sent";
 
@@ -27,6 +28,7 @@ export const WIZARD_ORDER: WizardStep[] = [
   "pathway",
   "readiness",
   "routing",
+  "delivery",
   "draft",
   "sent",
 ];
@@ -42,6 +44,7 @@ interface ReferralState {
   pathwayId: string | null;
   presentDocIds: string[];
   selectedProviderId: string | null;
+  selectedDeliveryOptionId: string | null;
   lastSentReferralId: string | null;
 
   /* ---- closed loop ---- */
@@ -61,6 +64,7 @@ interface ReferralState {
   addDocument: (docId: string) => void;
   removeDocument: (docId: string) => void;
   selectProvider: (providerId: string) => void;
+  selectDeliveryOption: (id: string) => void;
 
   sendReferral: (ranked: RankedProvider) => string;
   resolveGapTask: (referralId: string, taskId: string) => void;
@@ -81,6 +85,7 @@ export const useReferralStore = create<ReferralState>((set, get) => ({
   pathwayId: null,
   presentDocIds: [],
   selectedProviderId: null,
+  selectedDeliveryOptionId: null,
   lastSentReferralId: null,
 
   referrals: SEED_REFERRALS,
@@ -96,6 +101,7 @@ export const useReferralStore = create<ReferralState>((set, get) => ({
       pathwayId: patient.recommendedPathwayId,
       presentDocIds: initialPresentDocs(patient),
       selectedProviderId: null,
+      selectedDeliveryOptionId: null,
       lastSentReferralId: null,
     });
   },
@@ -132,7 +138,8 @@ export const useReferralStore = create<ReferralState>((set, get) => ({
   removeDocument: (docId) =>
     set((s) => ({ presentDocIds: s.presentDocIds.filter((d) => d !== docId) })),
 
-  selectProvider: (providerId) => set({ selectedProviderId: providerId }),
+  selectProvider: (providerId) => set({ selectedProviderId: providerId, selectedDeliveryOptionId: null }),
+  selectDeliveryOption: (id) => set({ selectedDeliveryOptionId: id }),
 
   sendReferral: (ranked) => {
     const { activePatientId, pathwayId, presentDocIds } = get();

@@ -12,6 +12,7 @@ import { Step2Safety } from "./steps/Step2Safety";
 import { Step3Pathway } from "./steps/Step3Pathway";
 import { Step4Readiness } from "./steps/Step4Readiness";
 import { Step5Routing } from "./steps/Step5Routing";
+import { StepDelivery } from "./steps/StepDelivery";
 import { Step6Draft } from "./steps/Step6Draft";
 import { Step7Sent } from "./steps/Step7Sent";
 
@@ -21,6 +22,7 @@ const STEP_COMPONENT: Record<WizardStep, ComponentType<{ patient: Patient }>> = 
   pathway: Step3Pathway,
   readiness: Step4Readiness,
   routing: Step5Routing,
+  delivery: StepDelivery,
   draft: Step6Draft,
   sent: Step7Sent,
 };
