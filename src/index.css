@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: 250 249 246; /* sand-50-ish warm */
+  --color-surface: 255 255 255;
+  --color-primary: 31 184 142; /* mint-500 */
+  --color-secondary: 113 82 224; /* lavender-600 */
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-sand-50 via-primary-50/40 to-lavender-50/50 text-sand-800 antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    @apply bg-lavender-200 text-lavender-900;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white/90 shadow-soft ring-1 ring-sand-200/70 backdrop-blur-sm;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+
+  /* Thin, calm scrollbars */
+  .scroll-soft {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(202 191 176) transparent;
+  }
+  .scroll-soft::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scroll-soft::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-sand-300;
+  }
+}
+
+/* Streaming-text caret */
+.stream-caret::after {
+  content: "▍";
+  @apply text-lavender-500;
+  animation: pulse-soft 1.1s ease-in-out infinite;
+}
