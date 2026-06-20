@@ -8,6 +8,7 @@ const LABELS: Record<WizardStep, string> = {
   pathway: "Pathway",
   readiness: "Readiness",
   routing: "Routing",
+  delivery: "Send Method",
   draft: "Draft",
   sent: "Sent",
 };

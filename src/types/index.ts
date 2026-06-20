@@ -233,3 +233,101 @@ export interface FunnelStage {
   baseline: number; // % surviving without Referral GPS
   withGps: number; // % surviving with Referral GPS
 }
+
+/* ----------------------------------------------------------------------------
+ * Referral delivery options (Send Method & Portal Selection step)
+ * ------------------------------------------------------------------------- */
+
+export type DeliveryMethodType =
+  | "ocean_ereferral"
+  | "ocean_econsult"
+  | "ocean_eorder"
+  | "central_intake"
+  | "community_service"
+  | "hospital_portal"
+  | "fax"
+  | "secure_message"
+  | "patient_self_booking";
+
+export type IntegrationStatus = "connected" | "available_manual" | "unavailable" | "unknown";
+export type AcceptanceProbabilityStr = "low" | "medium" | "high" | "unknown";
+export type DocumentStatus = "available" | "missing" | "optional" | "not_applicable";
+export type AttachmentStatus = "attached" | "missing" | "suggested";
+export type GeneratedFormType =
+  | "referral_letter"
+  | "specialty_form"
+  | "intake_form"
+  | "fax_cover"
+  | "fhir_payload"
+  | "patient_instruction"
+  | "requisition"
+  | "consent"
+  | "attachment_bundle";
+export type SubmissionActionType =
+  | "send_direct"
+  | "export_package"
+  | "open_portal"
+  | "generate_fax"
+  | "create_task"
+  | "notify_patient";
+
+export interface DeliveryRequiredDocument {
+  name: string;
+  status: DocumentStatus;
+  source: "EMR" | "patient" | "physician" | "external_lab" | "generated";
+  actionRequired?: string;
+}
+
+export interface DeliveryGeneratedForm {
+  name: string;
+  type: GeneratedFormType;
+  format: "PDF" | "JSON" | "HTML" | "text" | "portal_fields";
+  requiresPhysicianReview: boolean;
+}
+
+export interface DeliveryAttachment {
+  name: string;
+  type:
+    | "lab"
+    | "imaging"
+    | "ECG"
+    | "medication_list"
+    | "consult_note"
+    | "discharge_summary"
+    | "questionnaire"
+    | "other";
+  status: AttachmentStatus;
+}
+
+export interface DeliverySubmissionAction {
+  label: string;
+  actionType: SubmissionActionType;
+  enabled: boolean;
+  disabledReason?: string;
+}
+
+export interface ReferralDeliveryOption {
+  id: string;
+  methodType: DeliveryMethodType;
+  portalName: string;
+  destinationName: string;
+  status: IntegrationStatus;
+  /** Set by rankDeliveryOptions() — true for the top-scored option. */
+  recommended: boolean;
+  recommendationReason: string;
+  clinicalFitScore: number;
+  readinessScore: number;
+  estimatedTimeToAcceptedCare: string;
+  acceptanceProbability: AcceptanceProbabilityStr;
+  riskLevel: "low" | "medium" | "high";
+  riskReasons: string[];
+  requiredDocuments: DeliveryRequiredDocument[];
+  generatedForms: DeliveryGeneratedForm[];
+  attachments: DeliveryAttachment[];
+  submissionActions: DeliverySubmissionAction[];
+  audit: {
+    lastVerified: string;
+    dataSource: "provider_directory" | "clinic_rules" | "user_entered" | "unknown";
+    aiConfidence: number;
+  };
+}
